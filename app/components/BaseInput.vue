@@ -29,6 +29,7 @@
         :disabled="disabled"
         :readonly="readonly"
         :required="required"
+        :autocomplete="autocomplete"
         :class="inputClasses"
         @input="handleInput"
         @blur="handleBlur"
@@ -37,7 +38,7 @@
 
       <!-- Password Toggle Button -->
       <button
-        v-if="type === 'password'"
+        v-if="shouldShowPasswordToggle"
         type="button"
         @click="togglePasswordVisibility"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 transition-colors"
@@ -119,6 +120,7 @@ interface Props {
   size?: 'sm' | 'md' | 'lg'
   iconLeft?: any
   iconRight?: any
+  autocomplete?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -135,8 +137,13 @@ const emit = defineEmits<{
   focus: [event: FocusEvent]
 }>()
 
-// Generate unique ID for accessibility
-const inputId = `input-${Math.random().toString(36).substr(2, 9)}`
+// Generate unique ID for accessibility based on label or type
+const inputId = computed(() => {
+  if (props.label) {
+    return `input-${props.label.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`
+  }
+  return `input-${props.type}`
+})
 
 // Password visibility state
 const showPassword = ref(false)
@@ -153,6 +160,9 @@ const actualInputType = computed(() => {
   }
   return props.type
 })
+
+// Check if should show password toggle
+const shouldShowPasswordToggle = computed(() => props.type === 'password')
 
 const inputClasses = computed(() => {
   const baseClasses = [

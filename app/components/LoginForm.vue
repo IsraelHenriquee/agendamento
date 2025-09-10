@@ -16,6 +16,7 @@
         type="email"
         label="E-mail"
         placeholder="seu@email.com"
+        autocomplete="email"
         required
         :icon-left="AtSymbolIcon"
       />
@@ -26,6 +27,7 @@
         type="password"
         label="Senha"
         placeholder="Digite sua senha"
+        autocomplete="current-password"
         required
         :icon-left="LockClosedIcon"
       />
@@ -37,10 +39,19 @@
         size="lg"
         full-width
         class="mt-8"
+        :loading="isLoading"
+        :disabled="isLoading"
       >
-        Entrar
+        {{ isLoading ? 'Entrando...' : 'Entrar' }}
       </BaseButton>
     </form>
+
+    <!-- Error Message -->
+    <div v-if="authError" class="mt-4 p-3 bg-danger-50 border border-danger-200 rounded-lg">
+      <p class="text-sm text-danger-600">
+        {{ authError }}
+      </p>
+    </div>
 
     <!-- Additional Links -->
     <div class="mt-6 text-center">
@@ -54,12 +65,18 @@
 <script setup lang="ts">
 import { AtSymbolIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 
+// Composable de autenticação
+const { login, isLoading, error: authError } = useAuth()
+
 // Form data
 const email = ref('')
 const password = ref('')
 
-const handleSubmit = () => {
-  // TODO: Implementar lógica de login
-  console.log('Form submitted:', { email: email.value, password: password.value })
+const handleSubmit = async () => {
+  if (!email.value || !password.value) {
+    return
+  }
+
+  await login(email.value, password.value)
 }
 </script>

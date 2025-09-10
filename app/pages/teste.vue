@@ -1,13 +1,19 @@
 <template>
-  <div class="min-h-screen bg-neutral-50 py-12">
-    <div class="container mx-auto px-4 max-w-4xl">
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-neutral-900 mb-4">
-          Componentes de Teste
-        </h1>
-        <p class="text-lg text-neutral-600">
-          Avaliação dos componentes BaseButton e BaseInput
-        </p>
+  <NuxtLayout>
+    <!-- Conteúdo da página -->
+    <div class="space-y-6">
+      <!-- Header da página -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900">Teste de Componentes</h1>
+          <p class="text-neutral-600 mt-1">Avaliação dos componentes BaseButton e BaseInput</p>
+        </div>
+        <BaseButton variant="secondary" @click="resetAll">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Reset Tudo
+        </BaseButton>
       </div>
 
       <!-- BaseButton Tests -->
@@ -230,7 +236,7 @@
         <pre class="text-sm text-neutral-700 bg-white p-4 rounded-lg overflow-auto">{{ JSON.stringify({ testInputs, formData }, null, 2) }}</pre>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -306,5 +312,29 @@ const resetForm = () => {
   formData.name = ''
   formData.email = ''
   formData.phone = ''
+}
+
+const resetAll = () => {
+  // Reset test inputs
+  testInputs.basic = ''
+  testInputs.required = ''
+  testInputs.email = ''
+  testInputs.password = ''
+  testInputs.withIcons = ''
+  testInputs.withError = 'Valor inválido'
+  testInputs.disabled = 'Valor fixo'
+  testInputs.readonly = 'Não editável'
+  testInputs.number = 0
+  testInputs.small = ''
+  testInputs.medium = ''
+  testInputs.large = ''
+  
+  // Reset form data
+  resetForm()
+  
+  // Reset loading state
+  isLoading.value = false
+  
+  showInfo('Todos os campos foram resetados! 🔄')
 }
 </script>
