@@ -1,36 +1,49 @@
 <template>
   <NuxtLayout>
-    <div class="flex items-center justify-center min-h-96">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-neutral-900 mb-4">Dashboard</h1>
-        
-        <!-- Teste: Nome do usuário do Pinia -->
-        <div v-if="userStore.loading" class="text-neutral-600">
-          Carregando perfil...
-        </div>
-        <div v-else-if="userStore.error" class="text-red-600">
-          Erro: {{ userStore.error }}
-        </div>
-        <div v-else-if="userStore.profile?.nome" class="text-lg text-neutral-700">
-          Olá, <span class="font-semibold">{{ userStore.profile.nome }}</span>!
-        </div>
-        <div v-else class="text-neutral-500">
-          Perfil não encontrado
-        </div>
+    <div class="h-full flex flex-col">
+      <!-- Header -->
+      <div class="px-0 py-4 flex-shrink-0">
+        <h1 class="text-2xl font-bold text-neutral-900">Agendamentos</h1>
+      </div>
+
+      <!-- Conteúdo -->
+      <div class="flex-1 min-h-0">
+        <AgendamentoManager 
+          ref="agendamentoManagerRef"
+          class="h-full"
+        />
       </div>
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-// Store do usuário
-const userStore = useUserStore()
+// Imports explícitos
+import AgendamentoManager from '~/components/agendamentos/AgendamentoManager.vue'
 
 // Configuração da página
 useHead({
-  title: 'Dashboard - Sistema de Agendamento',
+  title: 'Agendamentos - Sistema de Agendamento',
   meta: [
-    { name: 'description', content: 'Dashboard principal do sistema de agendamento' }
+    { name: 'description', content: 'Gerenciamento de agendamentos do sistema' }
   ]
+})
+
+// Store de agendamento
+const agendamentoStore = useAgendamentoStore()
+
+// Referência para o componente AgendamentoManager
+const agendamentoManagerRef = ref()
+
+// Funções para interagir com o AgendamentoManager (futuras)
+// const handleNovoAgendamento = () => { ... }
+// const handleEditarAgendamento = (id: number) => { ... }
+// const handleDeletarAgendamento = (id: number) => { ... }
+
+// Lifecycle hooks
+onMounted(() => {
+  console.log('Página de Agendamentos carregada')
+  console.log('Data de referência:', agendamentoStore.dataReferencia)
+  console.log('Dias da semana:', agendamentoStore.diasSemana)
 })
 </script>
