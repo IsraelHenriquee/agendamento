@@ -1,18 +1,10 @@
 <template>
   <NuxtLayout>
-    <div class="h-full flex flex-col">
-      <!-- Header -->
-      <div class="px-0 py-4 flex-shrink-0">
-        <h1 class="text-2xl font-bold text-neutral-900">Agendamentos</h1>
-      </div>
-
-      <!-- Conteúdo -->
-      <div class="flex-1 min-h-0">
-        <AgendamentoManager 
-          ref="agendamentoManagerRef"
-          class="h-full"
-        />
-      </div>
+    <div class="h-full">
+      <AgendamentoManager 
+        ref="agendamentoManagerRef"
+        class="h-full"
+      />
     </div>
   </NuxtLayout>
 </template>

@@ -88,4 +88,11 @@ watch(() => userStore.profile, () => {
     carregarProfissionais()
   }
 })
+
+// Expor o profissional atual para componente pai
+defineExpose({
+  profissionalAtual: readonly(profissionalAtual),
+  loading: readonly(loading),
+  error: readonly(error)
+})
 </script>

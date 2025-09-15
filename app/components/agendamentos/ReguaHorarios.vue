@@ -1,10 +1,11 @@
 <template>
-  <div class="w-20 border-r border-neutral-200 bg-neutral-50">
+  <div class="w-20 bg-neutral-100">
     <div class="py-2">
       <div 
         v-for="hora in horarios" 
         :key="hora"
-        class="h-16 flex items-start justify-center border-b border-neutral-100 text-xs text-neutral-500 pt-1"
+        class="flex items-start justify-center border-b border-white text-xs text-neutral-500 pt-1"
+        style="height: 100px"
       >
         {{ hora }}
       </div>

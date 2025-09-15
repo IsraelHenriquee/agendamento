@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col items-center py-3 border-r border-neutral-200 last:border-r-0 hover:bg-neutral-50 cursor-pointer transition-colors">
-    <!-- Dia da semana abreviado -->
-    <div class="text-xs text-neutral-500 uppercase font-medium mb-1">
-      {{ diaSemanaAbrev }}
-    </div>
+  <div class="flex flex-col items-center py-4 px-3 bg-neutral-100 rounded-t-2xl cursor-pointer transition-colors">
     <!-- Número do dia -->
-    <div class="text-xl font-semibold text-neutral-800">
+    <div class="text-2xl font-bold text-neutral-800 mb-1">
       {{ numeroDia }}
+    </div>
+    <!-- Dia da semana abreviado -->
+    <div class="text-sm text-neutral-600 capitalize">
+      {{ diaSemanaAbrev }}
     </div>
   </div>
 </template>

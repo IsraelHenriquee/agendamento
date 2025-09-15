@@ -4,7 +4,7 @@
     <div class="w-20"></div>
     
     <!-- Grid com os dias da semana ocupando todo o espaço -->
-    <div class="flex flex-1">
+    <div class="flex flex-1 gap-2">
       <DiaItem 
         v-for="(dia, index) in diasSemana" 
         :key="index"

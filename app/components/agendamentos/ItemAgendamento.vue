@@ -1,31 +1,45 @@
 <template>
-  <div class="flex-1 border-r border-neutral-200 last:border-r-0 bg-white">
-    <!-- Header do dia (para debug) -->
-    <div class="text-center p-2 text-xs text-neutral-400 border-b border-neutral-100">
-      {{ formatarData(data) }}
-    </div>
-    
+  <div class="flex-1 relative bg-neutral-100">
     <!-- Área dos slots de agendamento -->
-    <div class="h-full">
-      <!-- Aqui serão os slots de agendamento -->
-      <div class="p-2 text-center text-xs text-neutral-300">
-        Slots do dia
-      </div>
+    <div class="h-full relative">
+      <SlotAgendamento
+        v-for="agendamento in agendamentosDodia"
+        :key="agendamento.id"
+        :agendamento="agendamento"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+// Import do componente SlotAgendamento
+import SlotAgendamento from './SlotAgendamento.vue'
+import type { AgAgendamento } from '../../../shared/types/database'
+
 interface Props {
   data: Date
+  agendamentos: AgAgendamento[]
 }
 
 const props = defineProps<Props>()
 
-// Função para formatar data no formato DD/MM
-const formatarData = (data: Date) => {
-  const dia = data.getDate().toString().padStart(2, '0')
-  const mes = (data.getMonth() + 1).toString().padStart(2, '0')
-  return `${dia}/${mes}`
-}
+// Computed para filtrar agendamentos do dia atual
+const agendamentosDodia = computed(() => {
+  return props.agendamentos.filter(agendamento => {
+    if (!agendamento.data) return false
+    
+    const dataAgendamento = new Date(agendamento.data)
+    const diaAgendamento = dataAgendamento.getDate()
+    const mesAgendamento = dataAgendamento.getMonth()
+    const anoAgendamento = dataAgendamento.getFullYear()
+    
+    const diaAtual = props.data.getDate()
+    const mesAtual = props.data.getMonth()
+    const anoAtual = props.data.getFullYear()
+    
+    return diaAgendamento === diaAtual && 
+           mesAgendamento === mesAtual && 
+           anoAgendamento === anoAtual
+  })
+})
 </script>

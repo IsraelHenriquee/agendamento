@@ -39,6 +39,22 @@ export interface AgCliente {
   telefone: string | null
 }
 
+// Agendamentos
+export interface AgAgendamento {
+  id: number
+  created_at: string
+  user_id: string | null
+  profissional_id: number | null
+  cliente_id: number | null
+  data: string | null // ISO date
+  hora_inicio: string | null // ISO time
+  hora_fim: string | null // ISO time
+  titulo: string | null
+  descricao: string | null
+  cancelado: boolean | null
+  cancelado_as: string | null
+}
+
 // Estado do store de usuário
 export interface UserState {
   profile: AgProfile | null
