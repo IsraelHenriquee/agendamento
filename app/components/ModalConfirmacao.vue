@@ -6,7 +6,7 @@
     :texto-botao-confirmar="textoBotaoConfirmar"
     :texto-botao-cancelar="textoBotaoCancelar"
     :mostrar-botao-confirmar="true"
-    :mostrar-botao-cancelar="true"
+    :mostrar-botao-cancelar="mostrarBotaoCancelar"
     @confirmar="handleConfirmar"
   >
     <div class="flex items-center">
@@ -39,6 +39,7 @@ interface Props {
   detalhes?: string
   textoBotaoConfirmar?: string
   textoBotaoCancelar?: string
+  mostrarBotaoCancelar?: boolean
   loading?: boolean
 }
 
@@ -46,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   titulo: 'Confirmar ação',
   textoBotaoConfirmar: 'Confirmar',
   textoBotaoCancelar: 'Cancelar',
+  mostrarBotaoCancelar: true,
   loading: false,
   detalhes: undefined
 })

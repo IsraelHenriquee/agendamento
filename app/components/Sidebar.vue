@@ -95,6 +95,19 @@
           <UserIcon class="w-5 h-5 flex-shrink-0" />
           <span v-if="!isCollapsed" class="font-medium">Profissionais</span>
         </NuxtLink>
+
+        <!-- Admin -->
+        <NuxtLink 
+          v-if="isAdmin"
+          to="/admin"
+          class="flex items-center rounded-lg text-neutral-700 hover:bg-primary-50 hover:text-primary-700 transition-colors group"
+          :class="isCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-2'"
+          active-class="bg-primary-100 text-primary-700"
+          :title="isCollapsed ? 'Administração' : undefined"
+        >
+          <CogIcon class="w-5 h-5 flex-shrink-0" />
+          <span v-if="!isCollapsed" class="font-medium">Admin</span>
+        </NuxtLink>
       </div>
     </nav>
 
@@ -162,16 +175,23 @@ import {
   UserIcon,
   FunnelIcon,
   ChevronLeftIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  CogIcon
 } from '@heroicons/vue/24/outline'
 
 // Composables
 const { logout } = useAuth()
+const userStore = useUserStore()
 
 // Estado do sidebar
 const isCollapsed = ref(false)
 const showCollapsedMenu = ref(false)
 const isLoading = ref(false)
+
+// Verificar se o usuário é admin
+const isAdmin = computed(() => {
+  return userStore.profile?.role === 'admin'
+})
 
 // Função para alternar o estado do sidebar
 const toggleSidebar = () => {

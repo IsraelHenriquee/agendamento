@@ -1,12 +1,20 @@
 <template>
   <NuxtLayout>
-    <div class="flex items-center justify-center min-h-96">
-      <h1 class="text-3xl font-bold text-neutral-900">Agendamentos</h1>
+    <!-- Header -->
+    <div class="px-6 py-4">
+      <h1 class="text-2xl font-bold text-neutral-900">Agendamentos</h1>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="p-6">
+      <ListaAgendamentos />
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import ListaAgendamentos from '../components/ListaAgendamentos.vue'
+
 // Configuração da página
 useHead({
   title: 'Agendamentos - Sistema de Agendamento',

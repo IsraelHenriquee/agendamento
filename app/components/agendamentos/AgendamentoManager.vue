@@ -44,6 +44,7 @@
           :key="index"
           :data="dia"
           :agendamentos="agendamentos"
+          @editar-agendamento="handleEditarAgendamento"
         />
       </div>
     </div>
@@ -53,7 +54,13 @@
       v-model="mostrarModalNovo"
       :profissional="profissionalAtualRef?.profissionalAtual || null"
       :diasSemana="agendamentoStore.diasSemana"
-      @salvar="handleSalvarAgendamento"
+      :clientes="clientes"
+      :loadingClientes="loadingClientes"
+      :agendamentos="agendamentos"
+      :agendamentoParaEditar="agendamentoParaEditar"
+      @agendamento-salvo="handleAgendamentoSalvo"
+      @agendamento-editado="handleAgendamentoEditado"
+      @agendamento-cancelado="handleAgendamentoCancelado"
     />
   </div>
 </template>
@@ -68,6 +75,8 @@ import ItemAgendamento from './ItemAgendamento.vue'
 import ModalNovoAgendamento from './ModalNovoAgendamento.vue'
 import BaseButton from '../BaseButton.vue'
 import { useAgendamento } from '../../composables/useAgendamento'
+import { useProfissionais } from '../../composables/useProfissionais'
+import type { AgCliente } from '../../../shared/types/database'
 
 // Store de agendamento
 const agendamentoStore = useAgendamentoStore()
@@ -75,8 +84,16 @@ const agendamentoStore = useAgendamentoStore()
 // Composable de agendamentos
 const { agendamentos, loading, error, fetchAgendamentosByProfissional, limparCache } = useAgendamento()
 
+// Composable de profissionais (para buscar clientes)
+const { fetchClientes } = useProfissionais()
+
 // Ref para o componente ProfissionalAtual
 const profissionalAtualRef = ref<InstanceType<typeof ProfissionalAtual> | null>(null)
+
+// Estado dos clientes
+const clientes = ref<AgCliente[]>([])
+const loadingClientes = ref(false)
+const errorClientes = ref<string | null>(null)
 
 // Props (se necessário no futuro)
 interface Props {}
@@ -87,13 +104,31 @@ const emit = defineEmits<{
   // 'evento': [parametro: tipo]
 }>()
 
+// Estado do modal de novo agendamento
+const mostrarModalNovo = ref(false)
+const agendamentoParaEditar = ref<AgAgendamento | null>(null)
+
 // Funções de agendamento
 const loadAgendamentos = async (profissionalId: number) => {
   await fetchAgendamentosByProfissional(profissionalId)
 }
 
-// Estado do modal
-const mostrarModalNovo = ref(false)
+// Função para buscar clientes em segundo plano
+const loadClientes = async () => {
+  loadingClientes.value = true
+  errorClientes.value = null
+  try {
+    console.log('Buscando lista de clientes...')
+    const dados = await fetchClientes()
+    clientes.value = dados
+    console.log('Clientes carregados:', dados.length)
+  } catch (err: any) {
+    console.error('Erro ao buscar clientes:', err)
+    errorClientes.value = err.message || 'Erro ao carregar clientes'
+  } finally {
+    loadingClientes.value = false
+  }
+}
 
 // Watch para buscar agendamentos quando o profissional mudar
 watch(
@@ -120,6 +155,13 @@ watch(
   { deep: true } // Watch profundo para detectar mudanças no array
 )
 
+// Watch para limpar agendamento em edição quando modal fechar
+watch(mostrarModalNovo, (novoValor) => {
+  if (!novoValor) {
+    agendamentoParaEditar.value = null
+  }
+})
+
 // Funções (serão adicionadas conforme necessário)
 const handleNovoAgendamento = () => {
   console.log('Novo agendamento clicado')
@@ -127,16 +169,36 @@ const handleNovoAgendamento = () => {
 }
 
 // Função para salvar novo agendamento
-const handleSalvarAgendamento = (dados: any) => {
-  console.log('Salvando agendamento:', dados)
-  // TODO: Implementar salvamento no banco
-  mostrarModalNovo.value = false
+const handleAgendamentoSalvo = (agendamento: any) => {
+  console.log('Agendamento salvo com sucesso:', agendamento)
   
   // Recarregar agendamentos após salvar
-  const profissional = profissionalAtualRef.value?.profissionalAtual
-  if (profissional?.profissional_id) {
-    recarregarAgendamentos()
-  }
+  recarregarAgendamentos()
+}
+
+// Função para editar agendamento
+const handleEditarAgendamento = (agendamento: AgAgendamento) => {
+  console.log('Editando agendamento:', agendamento)
+  agendamentoParaEditar.value = agendamento
+  mostrarModalNovo.value = true
+}
+
+// Função para agendamento editado
+const handleAgendamentoEditado = (agendamento: AgAgendamento) => {
+  console.log('Agendamento editado com sucesso:', agendamento)
+  agendamentoParaEditar.value = null
+  
+  // Recarregar agendamentos após editar
+  recarregarAgendamentos()
+}
+
+// Função para agendamento cancelado
+const handleAgendamentoCancelado = (agendamento: AgAgendamento) => {
+  console.log('Agendamento cancelado com sucesso:', agendamento)
+  agendamentoParaEditar.value = null
+  
+  // Recarregar agendamentos após cancelar
+  recarregarAgendamentos()
 }
 
 // Função para recarregar dados forçando nova busca (limpa cache)
@@ -149,6 +211,12 @@ const recarregarAgendamentos = () => {
   }
 }
 
+// Função para recarregar lista de clientes
+const recarregarClientes = () => {
+  console.log('Recarregando lista de clientes')
+  loadClientes()
+}
+
 // const createAgendamento = async () => { ... }
 // const updateAgendamento = async () => { ... }
 // const deleteAgendamento = async () => { ... }
@@ -157,6 +225,9 @@ const recarregarAgendamentos = () => {
 onMounted(() => {
   // Inicialização do componente
   console.log('AgendamentoManager montado')
+  
+  // Buscar clientes em segundo plano (não bloquear UI)
+  loadClientes()
   
   // Aguardar um pouco mais para garantir que o ProfissionalAtual carregou os dados
   setTimeout(() => {
@@ -168,10 +239,20 @@ onMounted(() => {
   }, 500) // Aguarda 500ms para o componente carregar
 })
 
+// Recarregar clientes quando a página for reativada (usuário volta de outra página)
+onActivated(() => {
+  // Recarregar clientes se a lista estiver vazia ou se houve erro
+  if (clientes.value.length === 0 || errorClientes.value) {
+    console.log('Página reativada - recarregando clientes')
+    loadClientes()
+  }
+})
+
 // Expor funções para componente pai (se necessário)
 defineExpose({
   loadAgendamentos,
   recarregarAgendamentos,
+  recarregarClientes,
   limparCache,
   loading: readonly(loading),
   error: readonly(error)

@@ -25,7 +25,11 @@ export interface AgProfissional {
 // Perfis
 export interface AgPerfil {
   id: number
+  created_at: string
+  user_id: string
   nome: string
+  role: string
+  email: string
 }
 
 // Clientes
@@ -53,6 +57,32 @@ export interface AgAgendamento {
   descricao: string | null
   cancelado: boolean | null
   cancelado_as: string | null
+  cor: string | null // Cor hexadecimal (ex: #DBE9FE)
+}
+
+// View completa de agendamentos (para relatórios)
+export interface AgViewAgendamentosCompleto {
+  id: number
+  created_at: string
+  user_id: string | null
+  data: string | null
+  hora_inicio: string | null
+  hora_fim: string | null
+  titulo: string | null
+  descricao: string | null
+  cancelado: boolean | null
+  cancelado_as: string | null
+  cor: string | null
+  cliente_id: number | null
+  cliente_nome: string | null
+  cliente_cpf: string | null
+  cliente_email: string | null
+  cliente_telefone: string | null
+  profissional_id: number | null
+  profile_id: number | null
+  profissional_nome: string | null
+  especialidade_id: number | null
+  especialidade: string | null
 }
 
 // Estado do store de usuário

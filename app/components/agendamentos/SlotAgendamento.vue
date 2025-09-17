@@ -1,26 +1,29 @@
 <template>
   <div 
-    class="bg-blue-100 border border-blue-200 rounded-md p-2 text-xs cursor-pointer hover:bg-blue-200 transition-colors absolute left-1 right-1 overflow-hidden"
+    class="border border-blue-200 rounded-md p-2 text-xs cursor-pointer hover:brightness-95 transition-all absolute left-1 right-1 overflow-hidden"
     :style="{ 
+      backgroundColor: corFundo,
+      color: corTexto,
       height: alturaSlot + 'px', 
       minHeight: '40px',
       top: posicaoTop + 'px'
     }"
+    @click="$emit('editar', agendamento)"
   >
     <!-- Horário -->
-    <div class="text-blue-600 font-medium mb-1 text-xs leading-tight">
+    <div class="font-medium mb-1 text-xs leading-tight opacity-90">
       {{ horarioInicio }} - {{ horarioFim }}
     </div>
     
     <!-- Título -->
-    <div class="text-blue-800 font-semibold text-sm leading-tight truncate">
+    <div class="font-semibold text-sm leading-tight truncate">
       {{ titulo }}
     </div>
     
     <!-- Descrição (apenas se houver espaço) -->
     <div 
       v-if="mostrarDescricao"
-      class="text-blue-700 text-xs leading-tight mt-1 truncate"
+      class="text-xs leading-tight mt-1 truncate opacity-90"
     >
       {{ descricao }}
     </div>
@@ -35,6 +38,10 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'editar': [agendamento: AgAgendamento]
+}>()
 
 // Computed para criar objetos Date baseados nos campos de data e hora
 const dataInicio = computed(() => {
@@ -83,6 +90,57 @@ const titulo = computed(() => {
 
 const descricao = computed(() => {
   return props.agendamento.descricao || ''
+})
+
+// Função para converter hex para rgb
+const hexParaRgb = (hex: string) => {
+  // Remove # se presente
+  hex = hex.replace('#', '')
+  
+  // Converter para RGB
+  const r = parseInt(hex.substr(0, 2), 16)
+  const g = parseInt(hex.substr(2, 2), 16)
+  const b = parseInt(hex.substr(4, 2), 16)
+  
+  return { r, g, b }
+}
+
+// Função para calcular luminância e determinar se é cor clara ou escura
+const corEClara = (hex: string) => {
+  const { r, g, b } = hexParaRgb(hex)
+  
+  // Fórmula de luminância
+  const luminancia = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  
+  return luminancia > 0.5
+}
+
+// Computed para cores dinâmicas baseadas na cor do banco
+const corPrincipal = computed(() => {
+  return props.agendamento.cor || '#DBE9FE' // Fallback para cor padrão
+})
+
+const corFundo = computed(() => {
+  return corPrincipal.value
+})
+
+const corTexto = computed(() => {
+  // Determinar cor do texto baseada na luminância da cor de fundo
+  const corClara = corEClara(corPrincipal.value)
+  
+  if (corClara) {
+    // Se a cor de fundo for clara, usar texto escuro
+    const { r, g, b } = hexParaRgb(corPrincipal.value)
+    const fator = 0.3 // Fator para escurecer
+    const rEscuro = Math.round(r * fator)
+    const gEscuro = Math.round(g * fator)
+    const bEscuro = Math.round(b * fator)
+    
+    return `rgb(${rEscuro}, ${gEscuro}, ${bEscuro})`
+  } else {
+    // Se a cor de fundo for escura, usar texto claro
+    return '#ffffff'
+  }
 })
 
 // Computed para calcular altura baseada na duração (100px por hora)

@@ -6,6 +6,7 @@
         v-for="agendamento in agendamentosDodia"
         :key="agendamento.id"
         :agendamento="agendamento"
+        @editar="$emit('editar-agendamento', $event)"
       />
     </div>
   </div>
@@ -23,23 +24,20 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const emit = defineEmits<{
+  'editar-agendamento': [agendamento: AgAgendamento]
+}>()
+
 // Computed para filtrar agendamentos do dia atual
 const agendamentosDodia = computed(() => {
   return props.agendamentos.filter(agendamento => {
     if (!agendamento.data) return false
     
-    const dataAgendamento = new Date(agendamento.data)
-    const diaAgendamento = dataAgendamento.getDate()
-    const mesAgendamento = dataAgendamento.getMonth()
-    const anoAgendamento = dataAgendamento.getFullYear()
+    // Usar apenas a parte da data (YYYY-MM-DD) para evitar problemas de fuso horário
+    const dataAgendamento = agendamento.data // Já está no formato YYYY-MM-DD
+    const dataAtual = props.data.toISOString().split('T')[0] // Converte para YYYY-MM-DD
     
-    const diaAtual = props.data.getDate()
-    const mesAtual = props.data.getMonth()
-    const anoAtual = props.data.getFullYear()
-    
-    return diaAgendamento === diaAtual && 
-           mesAgendamento === mesAtual && 
-           anoAgendamento === anoAtual
+    return dataAgendamento === dataAtual
   })
 })
 </script>

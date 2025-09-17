@@ -1,5 +1,8 @@
 <template>
-  <div class="text-center">
+  <div 
+    class="text-center cursor-pointer hover:bg-neutral-50 rounded-lg p-2 transition-colors"
+    @click="abrirModalSeletor"
+  >
     <template v-if="loading">
       <div class="animate-pulse">
         <div class="h-5 bg-neutral-300 rounded w-32 mb-1"></div>
@@ -12,9 +15,15 @@
     </template>
     
     <template v-else-if="profissionalAtual">
-      <h2 class="text-lg font-semibold text-neutral-800">
-        {{ profissionalAtual.nome }}
-      </h2>
+      <div class="flex items-center justify-center space-x-2">
+        <h2 class="text-lg font-semibold text-neutral-800">
+          {{ profissionalAtual.nome }}
+        </h2>
+        <!-- Ícone de seta para indicar que é clicável -->
+        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
       <p class="text-sm text-neutral-500">
         {{ profissionalAtual.especialidade }}
       </p>
@@ -24,9 +33,21 @@
       <p class="text-sm text-neutral-400">Nenhum profissional encontrado</p>
     </template>
   </div>
+
+  <!-- Modal de Seletor de Profissional -->
+  <ModalSeletorProfissional
+    v-model="mostrarModalSeletor"
+    :profissionais="profissionais"
+    :profissionalSelecionado="profissionalAtual"
+    :loading="loading"
+    :error="error"
+    @selecionar="selecionarProfissional"
+    @recarregar="carregarProfissionais"
+  />
 </template>
 
 <script setup lang="ts">
+import ModalSeletorProfissional from '../ModalSeletorProfissional.vue'
 import type { AgProfissional } from '../../../shared/types/database'
 
 // Estado reativo
@@ -35,11 +56,30 @@ const profissionalAtual = ref<AgProfissional | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
 
+// Estado do modal
+const mostrarModalSeletor = ref(false)
+
 // Store de usuário para pegar o profile logado
 const userStore = useUserStore()
 
 // Composable para buscar dados
 const { fetchProfissionais } = useProfissionais()
+
+// Função para abrir o modal seletor
+const abrirModalSeletor = () => {
+  mostrarModalSeletor.value = true
+}
+
+// Função para selecionar um profissional
+const selecionarProfissional = (profissional: AgProfissional) => {
+  console.log('Profissional selecionado:', profissional.nome)
+  profissionalAtual.value = profissional
+}
+
+// Função para definir o profissional atual (será chamada pelo pai)
+const setProfissionalAtual = (profissional: AgProfissional) => {
+  profissionalAtual.value = profissional
+}
 
 // Função para carregar profissionais
 const carregarProfissionais = async () => {
@@ -89,10 +129,13 @@ watch(() => userStore.profile, () => {
   }
 })
 
-// Expor o profissional atual para componente pai
+// Expor o profissional atual e funções para componente pai
 defineExpose({
   profissionalAtual: readonly(profissionalAtual),
   loading: readonly(loading),
-  error: readonly(error)
+  error: readonly(error),
+  profissionais: readonly(profissionais),
+  setProfissionalAtual,
+  carregarProfissionais
 })
 </script>

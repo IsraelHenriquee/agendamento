@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirm',
-      exclude: ['/login', '/confirm'], // Páginas que não precisam de autenticação
+      exclude: ['/login', '/confirm', '/esqueci-senha', '/recuperar-senha'], // Páginas que não precisam de autenticação
       saveRedirectToCookie: true // Salva página original no cookie
     }
   }

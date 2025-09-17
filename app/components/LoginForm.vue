@@ -55,9 +55,12 @@
 
     <!-- Additional Links -->
     <div class="mt-6 text-center">
-      <a href="#" class="text-sm text-primary-600 hover:text-primary-700 transition-colors">
+      <NuxtLink 
+        to="/esqueci-senha" 
+        class="text-sm text-primary-600 hover:text-primary-700 transition-colors"
+      >
         Esqueceu sua senha?
-      </a>
+      </NuxtLink>
     </div>
   </div>
 </template>

@@ -137,13 +137,8 @@ const emit = defineEmits<{
   focus: [event: FocusEvent]
 }>()
 
-// Generate unique ID for accessibility based on label or type
-const inputId = computed(() => {
-  if (props.label) {
-    return `input-${props.label.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`
-  }
-  return `input-${props.type}`
-})
+// Generate unique ID that works consistently with SSR
+const inputId = useId()
 
 // Password visibility state
 const showPassword = ref(false)

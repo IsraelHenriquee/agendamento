@@ -79,10 +79,14 @@ const closeDropdown = () => {
   isOpen.value = false
 }
 
-// Handler para perfil (por enquanto sem ação)
-const handleProfile = () => {
-  console.log('Perfil clicado - funcionalidade em desenvolvimento')
-  closeDropdown()
+// Handler para perfil
+const handleProfile = async () => {
+  try {
+    await navigateTo('/profile')
+    closeDropdown()
+  } catch (error) {
+    console.error('Erro ao navegar para perfil:', error)
+  }
 }
 
 // Handler para logout
