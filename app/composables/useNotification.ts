@@ -1,26 +1,45 @@
-import { useToast } from 'vue-toastification'
-
 export const useNotification = () => {
-  const toast = useToast()
-
-  const showSuccess = (message: string, options?: any) => {
-    toast.success(message, options)
+  const getToast = async () => {
+    if (process.client) {
+      const { useToast } = await import('vue-toastification')
+      return useToast()
+    }
+    return null
   }
 
-  const showError = (message: string, options?: any) => {
-    toast.error(message, options)
+  const showSuccess = async (message: string, options?: any) => {
+    const toast = await getToast()
+    if (toast) {
+      toast.success(message, options)
+    }
   }
 
-  const showWarning = (message: string, options?: any) => {
-    toast.warning(message, options)
+  const showError = async (message: string, options?: any) => {
+    const toast = await getToast()
+    if (toast) {
+      toast.error(message, options)
+    }
   }
 
-  const showInfo = (message: string, options?: any) => {
-    toast.info(message, options)
+  const showWarning = async (message: string, options?: any) => {
+    const toast = await getToast()
+    if (toast) {
+      toast.warning(message, options)
+    }
   }
 
-  const showDefault = (message: string, options?: any) => {
-    toast(message, options)
+  const showInfo = async (message: string, options?: any) => {
+    const toast = await getToast()
+    if (toast) {
+      toast.info(message, options)
+    }
+  }
+
+  const showDefault = async (message: string, options?: any) => {
+    const toast = await getToast()
+    if (toast) {
+      toast(message, options)
+    }
   }
 
   return {
