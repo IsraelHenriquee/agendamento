@@ -110,6 +110,7 @@ import { CheckCircleIcon } from '@heroicons/vue/24/outline'
 // Composables
 const { changePassword: updatePassword } = useAuth()
 const { showSuccess, showError } = useNotification()
+const route = useRoute()
 
 // Estado do formulário
 const newPassword = ref('')
@@ -216,7 +217,13 @@ const changePassword = async () => {
     // Sucesso
     successMessage.value = 'Senha alterada com sucesso!'
     showSuccess('Senha alterada com sucesso!')
-    resetForm()
+    
+    // Redirecionar apenas se estivermos na página de recuperação de senha
+    if (route.path === '/recuperar-senha') {
+      setTimeout(async () => {
+        await navigateTo('/')
+      }, 1500)
+    }
     
   } catch (error: any) {
     console.error('Erro ao alterar senha:', error)

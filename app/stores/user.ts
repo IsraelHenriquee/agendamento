@@ -53,6 +53,12 @@ export const useUserStore = defineStore('user', () => {
 
   // Watcher para mudanças no usuário autenticado
   watch(user, async (newUser) => {
+    // Não buscar perfil se estivermos na página de recuperação de senha
+    const route = useRoute()
+    if (route.path === '/recuperar-senha') {
+      return
+    }
+    
     if (newUser) {
       await fetchProfile()
     } else {
