@@ -1,13 +1,14 @@
 <template>
-  <div class="w-20 bg-neutral-100">
-    <div class="py-2">
+  <div class="w-20 bg-gray-50 border-r border-gray-300">
+    <div class="py-2 pb-8">
       <div 
-        v-for="hora in horarios" 
+        v-for="(hora, index) in horarios" 
         :key="hora"
-        class="flex items-start justify-center border-b border-white text-xs text-neutral-500 pt-1"
+        class="flex items-start justify-center text-xs text-gray-600 font-medium pt-2 relative"
+        :class="index < horarios.length - 1 ? 'border-b border-gray-200' : ''"
         style="height: 100px"
       >
-        {{ hora }}
+        <span class="bg-gray-50 px-1 rounded text-center">{{ hora }}</span>
       </div>
     </div>
   </div>

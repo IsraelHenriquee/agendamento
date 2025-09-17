@@ -155,12 +155,13 @@ const posicaoTop = computed(() => {
   const horaInicio = dataInicio.value.getHours()
   const minutoInicio = dataInicio.value.getMinutes()
   
-  // Base: 8:00 AM com padding inicial da régua
-  const paddingTopRegua = 8 // Padding inicial da régua
+  // Base: 8:00 AM alinhado com a régua
+  // Considerando apenas py-2 (8px) + pt-2 (8px) = 16px de offset inicial
   const offsetHoras = horaInicio - 8
   const offsetMinutos = minutoInicio * (100 / 60) // 100px por hora = ~1.67px por minuto
   
-  return paddingTopRegua + (offsetHoras * 100) + offsetMinutos
+  // Apenas 10px de padding inicial para alinhar com o texto da régua
+  return 10 + (offsetHoras * 100) + offsetMinutos
 })
 
 // Computed para determinar se deve mostrar a descrição baseado na altura disponível

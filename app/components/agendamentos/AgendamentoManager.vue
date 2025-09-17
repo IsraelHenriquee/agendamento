@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col">
+  <div class="flex flex-col">
     <!-- Header -->
     <div class="flex flex-col">
       <!-- Primeira linha - Controles principais -->
@@ -21,24 +21,24 @@
             size="md"
             @click="handleNovoAgendamento"
           >
-            Novo
+            Novo Agendamento
           </BaseButton>
         </div>
       </div>
       
       <!-- Segunda linha - Lista de Dias -->
-      <div class="px-6 pb-2">
+      <div class="px-6 pb-0">
         <ListaDias :diasSemana="agendamentoStore.diasSemana" />
       </div>
     </div>
 
     <!-- Corpo - Ocupa todo o restante do espaço -->
-    <div class="flex-1 flex">
+    <div class="flex bg-white shadow-sm mx-6 mb-8 rounded-b-lg border-l border-r border-b border-gray-300">
       <!-- Lado esquerdo - Régua de Horários -->
       <ReguaHorarios />
       
       <!-- Grid de dias - Lista os 7 dias da semana -->
-      <div class="flex flex-1 px-6 gap-2">
+      <div class="flex flex-1">
         <ItemAgendamento
           v-for="(dia, index) in agendamentoStore.diasSemana"
           :key="index"

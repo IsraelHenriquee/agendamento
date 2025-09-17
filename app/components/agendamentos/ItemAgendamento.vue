@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 relative bg-neutral-100">
+  <div class="flex-1 relative bg-white border-r border-gray-300 last:border-r-0 pb-8">    
     <!-- Área dos slots de agendamento -->
     <div class="h-full relative">
       <SlotAgendamento
@@ -8,6 +8,18 @@
         :agendamento="agendamento"
         @editar="$emit('editar-agendamento', $event)"
       />
+      
+      <!-- Indicador quando não há agendamentos (mais sutil) -->
+      <div 
+        v-if="agendamentosDodia.length === 0" 
+        class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-30 transition-opacity duration-300 pointer-events-none"
+      >
+        <div class="text-gray-300 text-xs">
+          <svg class="w-6 h-6 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -1,9 +1,8 @@
 <template>
   <NuxtLayout>
-    <div class="h-full">
+    <div style="padding-bottom: 10px;">
       <AgendamentoManager 
         ref="agendamentoManagerRef"
-        class="h-full"
       />
     </div>
   </NuxtLayout>

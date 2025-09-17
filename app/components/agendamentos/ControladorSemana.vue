@@ -1,35 +1,33 @@
 <template>
-  <div class="flex flex-col items-center gap-3">
+  <div class="flex items-center gap-4">
+    <!-- Botão anterior -->
+    <button
+      @click="agendamentoStore.voltarSemana()"
+      class="p-2 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 shadow-sm"
+      title="Semana anterior"
+    >
+      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    
     <!-- Texto com período da semana -->
-    <div class="text-center">
-      <p class="text-lg font-semibold text-neutral-800">
+    <div class="text-center min-w-0 flex-1">
+      <p class="text-lg font-semibold text-neutral-800 whitespace-nowrap">
         {{ formatarData(primeiraData) }} - {{ formatarData(ultimaData) }}
       </p>
-    
     </div>
     
-    <!-- Botões de navegação -->
-    <div class="flex items-center gap-2">
-      <button
-        @click="agendamentoStore.voltarSemana()"
-        class="p-2 rounded-lg bg-neutral-50 border border-neutral-200 hover:bg-neutral-100 hover:border-neutral-300 transition-all duration-200 shadow-sm"
-        title="Semana anterior"
-      >
-        <svg class="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      
-      <button
-        @click="agendamentoStore.avancarSemana()"
-        class="p-2 rounded-lg bg-neutral-50 border border-neutral-200 hover:bg-neutral-100 hover:border-neutral-300 transition-all duration-200 shadow-sm"
-        title="Próxima semana"
-      >
-        <svg class="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
+    <!-- Botão próximo -->
+    <button
+      @click="agendamentoStore.avancarSemana()"
+      class="p-2 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 shadow-sm"
+      title="Próxima semana"
+    >
+      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
   </div>
 </template>
 
